@@ -1,0 +1,37 @@
+EquipmentID,AssetName,AssetType,CriticalityClass,IsSeawaterCooled,Risk30d,RiskBand
+1006,STEA-1006,Steam Turbine,C,1,94,High
+1009,COMP-1009,Compressor,C,0,92,High
+1005,HEAT-1005,Heat Exchanger,B,1,87,High
+1028,ELEC-1028,Electric Motor,C,0,81,High
+1021,CONT-1021,Control Valve,B,0,69,High
+1025,ELEC-1025,Electric Motor,B,0,57,High
+1026,CONT-1026,Control Valve,B,1,44,Medium
+1019,STEA-1019,Steam Turbine,C,0,44,Medium
+1020,HEAT-1020,Heat Exchanger,C,1,40,Medium
+1022,HEAT-1022,Heat Exchanger,B,1,37,Medium
+1017,CONT-1017,Control Valve,C,0,34,Low
+1034,CONT-1034,Control Valve,B,0,33,Low
+1008,ELEC-1008,Electric Motor,B,0,32,Low
+1010,CENT-1010,Centrifugal Pump,C,0,31,Low
+1030,HEAT-1030,Heat Exchanger,B,1,28,Low
+1002,ELEC-1002,Electric Motor,B,0,28,Low
+1029,CONT-1029,Control Valve,B,0,27,Low
+1031,HEAT-1031,Heat Exchanger,B,1,27,Low
+1013,ELEC-1013,Electric Motor,B,1,27,Low
+1004,HEAT-1004,Heat Exchanger,B,1,26,Low
+1032,COMP-1032,Compressor,B,0,26,Low
+1035,STEA-1035,Steam Turbine,A,1,24,Low
+1036,CENT-1036,Centrifugal Pump,B,0,22,Low
+1024,STEA-1024,Steam Turbine,A,1,22,Low
+1012,STEA-1012,Steam Turbine,B,0,22,Low
+1016,ELEC-1016,Electric Motor,A,0,21,Low
+1007,CENT-1007,Centrifugal Pump,C,1,21,Low
+1011,CONT-1011,Control Valve,B,0,21,Low
+1001,CENT-1001,Centrifugal Pump,A,0,20,Low
+1003,CONT-1003,Control Valve,A,0,17,Low
+1018,CENT-1018,Centrifugal Pump,B,0,17,Low
+1033,CENT-1033,Centrifugal Pump,A,0,16,Low
+1027,HEAT-1027,Heat Exchanger,B,1,15,Low
+1014,ELEC-1014,Electric Motor,A,1,11,Low
+1023,COMP-1023,Compressor,A,1,11,Low
+1015,ELEC-1015,Electric Motor,A,1,10,Low

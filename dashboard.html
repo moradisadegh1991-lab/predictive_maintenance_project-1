@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reliability & Predictive Maintenance — Kavian Petrochemical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0B141B; --panel:#13212C; --panel2:#182B38; --raise:#1E3340;
+  --line:#27404F; --hair:#1c303c;
+  --tx:#E6EDF1; --dim:#8AA0AD; --faint:#5E7886;
+  --teal:#2FB8C6; --teal-d:#1d8995;
+  --amber:#E8A33D; --red:#E5524A; --green:#5FC9A0;
+  --shadow:0 1px 0 rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1200px 600px at 78% -10%, rgba(47,184,198,.07), transparent 60%),
+    var(--bg);
+  color:var(--tx); font-family:"IBM Plex Sans",system-ui,sans-serif;
+  line-height:1.45; padding:0 0 56px; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"IBM Plex Sans Condensed",sans-serif;text-transform:uppercase;
+  letter-spacing:.18em;font-size:11px;color:var(--faint);font-weight:600}
+
+/* ---- top status bar ---- */
+.bar{border-bottom:1px solid var(--hair);background:rgba(11,20,27,.7);
+  backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+.bar .wrap{display:flex;align-items:center;gap:20px;padding-top:16px;padding-bottom:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 0 rgba(95,201,160,.6);animation:pulse 2.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(95,201,160,.5)}70%{box-shadow:0 0 0 7px rgba(95,201,160,0)}100%{box-shadow:0 0 0 0 rgba(95,201,160,0)}}
+.brand h1{font-size:15px;font-weight:600;letter-spacing:.01em}
+.brand .sub{font-size:12px;color:var(--dim)}
+.bar .meta{margin-left:auto;display:flex;gap:26px}
+.meta .k{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+.meta .v{font-size:14px;font-weight:600}
+
+/* ---- hero ---- */
+.hero{padding-top:34px}
+.hero .lead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:22px}
+.hero h2{font-size:26px;font-weight:600;letter-spacing:-.01em;max-width:560px;line-height:1.25}
+.hero h2 b{color:var(--teal);font-weight:600}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+  border-radius:14px;padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal);opacity:.8}
+.kpi.warn::before{background:var(--amber)} .kpi.crit::before{background:var(--red)}
+.kpi .lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;font-weight:500}
+.kpi .num{font-family:"IBM Plex Mono",monospace;font-size:34px;font-weight:500;margin-top:10px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.kpi .unit{font-size:14px;color:var(--dim);font-weight:400;margin-left:3px}
+.kpi .foot{font-size:12px;color:var(--faint);margin-top:6px}
+
+/* predictive story strip */
+.story{margin-top:14px;background:
+   linear-gradient(90deg, rgba(47,184,198,.10), rgba(47,184,198,.02));
+  border:1px solid var(--teal-d);border-radius:14px;padding:18px 20px;
+  display:flex;align-items:center;gap:30px;flex-wrap:wrap}
+.story .tag{font-family:"IBM Plex Sans Condensed";text-transform:uppercase;letter-spacing:.16em;
+  font-size:11px;color:var(--teal);font-weight:600}
+.story p{font-size:14px;color:var(--tx);max-width:520px}
+.story .lift{margin-left:auto;display:flex;gap:26px}
+.lift .blk{text-align:right}
+.lift .blk .t{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+.lift .blk .r{font-family:"IBM Plex Mono";font-size:20px;font-weight:600}
+.lift .blk .r .was{color:var(--faint);font-size:14px;font-weight:400}
+.lift .blk .r .arr{color:var(--teal);margin:0 5px}
+
+/* ---- panels grid ---- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;box-shadow:var(--shadow)}
+.panel.span{grid-column:1 / -1}
+.phead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:10px}
+.phead h3{font-size:15px;font-weight:600}
+.phead .note{font-size:12px;color:var(--faint)}
+.chartbox{position:relative;height:230px}
+
+/* ---- watchlist (signature) ---- */
+.watch{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 22px}
+.row{display:grid;grid-template-columns:150px 1fr 84px;align-items:center;gap:14px;
+  padding:12px 0;border-bottom:1px solid var(--hair)}
+.row:nth-last-child(-n+2){border-bottom:none}
+.asset .nm{font-weight:600;font-size:14px}
+.asset .chips{margin-top:5px;display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:10px;letter-spacing:.04em;padding:2px 7px;border-radius:20px;border:1px solid var(--line);color:var(--dim)}
+.chip.sw{color:var(--teal);border-color:var(--teal-d)}
+.chip.cA{color:var(--red);border-color:#5a2b2b} .chip.cB{color:var(--amber);border-color:#5a4624} .chip.cC{color:var(--dim)}
+.spark{height:46px;width:100%}
+.risk{text-align:right}
+.risk .pct{font-family:"IBM Plex Mono";font-size:26px;font-weight:600;line-height:1}
+.risk .pl{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+.risk.hi .pct{color:var(--red)} .risk.md .pct{color:var(--amber)} .risk.lo .pct{color:var(--green)}
+
+.legend{display:flex;gap:16px;font-size:12px;color:var(--dim);margin-top:4px}
+.legend i{display:inline-block;width:10px;height:2px;vertical-align:middle;margin-right:6px}
+
+footer{margin-top:34px;color:var(--faint);font-size:12px;border-top:1px solid var(--hair);padding-top:18px}
+footer b{color:var(--dim);font-weight:600}
+
+.reveal{opacity:0;transform:translateY(10px);animation:rise .6s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}.dot{animation:none}}
+@media (max-width:880px){
+  .kpis{grid-template-columns:repeat(2,1fr)} .grid{grid-template-columns:1fr}
+  .watch{grid-template-columns:1fr} .hero h2{font-size:22px}
+  .story .lift{margin-left:0;width:100%;justify-content:space-between}
+}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <div class="brand">
+    <span class="dot"></span>
+    <div><h1 id="plant">—</h1><div class="sub" id="period">—</div></div>
+  </div>
+  <div class="meta">
+    <div><div class="k">Assets</div><div class="v mono" id="m-assets">—</div></div>
+    <div><div class="k">Failures (24mo)</div><div class="v mono" id="m-fail">—</div></div>
+    <div><div class="k">Status</div><div class="v" style="color:var(--green)">Monitoring</div></div>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="lead reveal">
+      <h2>Equipment reliability is healthy — but the value is seeing the <b>next failure before it happens</b>.</h2>
+      <div class="eyebrow">Reliability &nbsp;/&nbsp; Predictive Maintenance</div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi reveal" style="animation-delay:.05s"><div class="lbl">OEE</div><div class="num"><span id="k-oee">—</span><span class="unit">%</span></div><div class="foot">Availability × Performance × Quality</div></div>
+      <div class="kpi reveal" style="animation-delay:.1s"><div class="lbl">MTBF · fleet</div><div class="num"><span id="k-mtbf">—</span><span class="unit">h</span></div><div class="foot">Mean time between failures</div></div>
+      <div class="kpi reveal" style="animation-delay:.15s"><div class="lbl">MTTR · fleet</div><div class="num"><span id="k-mttr">—</span><span class="unit">h</span></div><div class="foot">Mean time to repair</div></div>
+      <div class="kpi warn reveal" style="animation-delay:.2s"><div class="lbl">Breakdown share</div><div class="num"><span id="k-bd">—</span><span class="unit">%</span></div><div class="foot">Unplanned of all failures</div></div>
+    </div>
+
+    <div class="story reveal" style="animation-delay:.25s">
+      <span class="tag">Predictive model</span>
+      <p>Adding vibration, bearing-temperature and pressure <i>trend</i> features lifts the 30-day failure forecast from near-guess to operationally useful.</p>
+      <div class="lift">
+        <div class="blk"><div class="t">ROC-AUC</div><div class="r"><span class="was" id="auc-b">—</span><span class="arr">→</span><span id="auc-f">—</span></div></div>
+        <div class="blk"><div class="t">Failure recall</div><div class="r"><span class="was" id="rec-b">—</span><span class="arr">→</span><span id="rec-f">—</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="panel reveal">
+      <div class="phead"><h3>OEE & components</h3><span class="note">monthly</span></div>
+      <div class="chartbox"><canvas id="oeeChart"></canvas></div>
+    </div>
+    <div class="panel reveal">
+      <div class="phead"><h3>Failure modes</h3><span class="note">Pareto · count + cumulative %</span></div>
+      <div class="chartbox"><canvas id="paretoChart"></canvas></div>
+    </div>
+    <div class="panel reveal">
+      <div class="phead"><h3>MTBF by criticality class</h3><span class="note">hours</span></div>
+      <div class="chartbox"><canvas id="critChart"></canvas></div>
+    </div>
+    <div class="panel reveal">
+      <div class="phead"><h3>Top equipment by downtime</h3><span class="note">hours · 24 months</span></div>
+      <div class="chartbox"><canvas id="downChart"></canvas></div>
+    </div>
+
+    <div class="panel span reveal">
+      <div class="phead">
+        <h3>Predictive watchlist — assets most likely to fail in the next 30 days</h3>
+        <span class="note">vibration trend (last 30 days) vs warning / danger thresholds</span>
+      </div>
+      <div class="watch" id="watch"></div>
+      <div class="legend">
+        <span><i style="background:var(--teal)"></i>vibration mm/s</span>
+        <span><i style="background:var(--amber)"></i>warning 4.5</span>
+        <span><i style="background:var(--red)"></i>danger 7.1</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>Synthetic demonstration data</b> modelled on petrochemical maintenance operations (CMMS work orders, production/OEE, and IoT sensor streams).
+    Built end-to-end: star-schema data model · DAX/Pandas KPI logic · RandomForest failure-risk model · this report layer.
+  </footer>
+</div>
+
+<script>
+const DATA = {"plant": "Kavian Petrochemical \u2014 Asalouyeh / South Pars", "period": "Jan 2024 \u2013 Dec 2025", "assets": 36, "fleet": {"failures": 225, "mtbf": 2725.068, "mttr": 7.158, "availability": 0.971, "performance": 0.919, "quality": 0.974, "oee": 0.869}, "breakdown_share": 0.196, "oee_trend": [{"month": "2024-01", "availability": 0.972, "performance": 0.918, "quality": 0.974, "oee": 0.869}, {"month": "2024-02", "availability": 0.971, "performance": 0.919, "quality": 0.974, "oee": 0.869}, {"month": "2024-03", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.87}, {"month": "2024-04", "availability": 0.97, "performance": 0.919, "quality": 0.974, "oee": 0.869}, {"month": "2024-05", "availability": 0.971, "performance": 0.92, "quality": 0.974, "oee": 0.87}, {"month": "2024-06", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.87}, {"month": "2024-07", "availability": 0.972, "performance": 0.918, "quality": 0.974, "oee": 0.869}, {"month": "2024-08", "availability": 0.971, "performance": 0.919, "quality": 0.973, "oee": 0.869}, {"month": "2024-09", "availability": 0.971, "performance": 0.919, "quality": 0.974, "oee": 0.869}, {"month": "2024-10", "availability": 0.97, "performance": 0.919, "quality": 0.974, "oee": 0.869}, {"month": "2024-11", "availability": 0.971, "performance": 0.92, "quality": 0.974, "oee": 0.87}, {"month": "2024-12", "availability": 0.971, "performance": 0.919, "quality": 0.974, "oee": 0.869}, {"month": "2025-01", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.868}, {"month": "2025-02", "availability": 0.972, "performance": 0.918, "quality": 0.974, "oee": 0.869}, {"month": "2025-03", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.869}, {"month": "2025-04", "availability": 0.973, "performance": 0.919, "quality": 0.974, "oee": 0.871}, {"month": "2025-05", "availability": 0.973, "performance": 0.92, "quality": 0.974, "oee": 0.872}, {"month": "2025-06", "availability": 0.969, "performance": 0.919, "quality": 0.973, "oee": 0.867}, {"month": "2025-07", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.869}, {"month": "2025-08", "availability": 0.971, "performance": 0.92, "quality": 0.974, "oee": 0.87}, {"month": "2025-09", "availability": 0.969, "performance": 0.92, "quality": 0.973, "oee": 0.868}, {"month": "2025-10", "availability": 0.972, "performance": 0.918, "quality": 0.974, "oee": 0.87}, {"month": "2025-11", "availability": 0.971, "performance": 0.918, "quality": 0.974, "oee": 0.868}, {"month": "2025-12", "availability": 0.97, "performance": 0.92, "quality": 0.974, "oee": 0.869}], "pareto": [{"mode": "Seawater Leak", "count": 57, "cum": 25.3}, {"mode": "Corrosion", "count": 46, "cum": 45.8}, {"mode": "Bearing Failure", "count": 39, "cum": 63.1}, {"mode": "Vibration", "count": 30, "cum": 76.4}, {"mode": "Electrical Fault", "count": 27, "cum": 88.4}, {"mode": "Seal Leak", "count": 26, "cum": 100.0}], "by_crit": [{"crit": "A", "mtbf": 6677.0, "mttr": 6.4, "failures": 23}, {"crit": "B", "mtbf": 2631.0, "mttr": 6.6, "failures": 123}, {"crit": "C", "mtbf": 1721.0, "mttr": 8.2, "failures": 79}], "top_down": [{"name": "HEAT-1020", "hours": 589.0, "crit": "C"}, {"name": "HEAT-1027", "hours": 574.0, "crit": "B"}, {"name": "CONT-1017", "hours": 569.0, "crit": "C"}, {"name": "STEA-1006", "hours": 562.0, "crit": "C"}, {"name": "COMP-1009", "hours": 549.0, "crit": "C"}, {"name": "STEA-1019", "hours": 546.0, "crit": "C"}, {"name": "ELEC-1013", "hours": 534.0, "crit": "B"}, {"name": "STEA-1012", "hours": 529.0, "crit": "B"}], "model": {"auc_base": 0.639, "auc_full": 0.841, "rec_base": 0.22, "rec_full": 0.51}, "watchlist": [{"name": "STEA-1006", "type": "Steam Turbine", "crit": "C", "seawater": true, "risk": 94, "vib": [2.0, 2.33, 2.03, 2.03, 2.17, 2.64, 2.13, 2.08, 2.34, 2.1, 2.23, 2.21, 2.25, 2.27, 2.32, 2.46, 2.46, 2.56, 2.67, 2.79, 2.93, 3.08, 3.25, 3.44, 3.63, 3.85, 4.07, 4.31, 4.57, 4.84]}, {"name": "COMP-1009", "type": "Compressor", "crit": "C", "seawater": false, "risk": 92, "vib": [2.12, 1.78, 1.78, 2.12, 1.66, 1.88, 1.88, 1.74, 1.75, 1.83, 2.04, 2.08, 1.81, 2.06, 2.19, 2.08, 1.75, 1.73, 1.95, 2.06, 1.98, 2.06, 2.06, 2.34, 2.53, 2.76, 3.02, 3.31, 3.65, 4.01]}, {"name": "HEAT-1005", "type": "Heat Exchanger", "crit": "B", "seawater": true, "risk": 87, "vib": [2.77, 2.77, 2.52, 2.56, 2.81, 2.36, 2.46, 2.26, 2.51, 2.66, 2.73, 2.45, 2.32, 2.31, 2.18, 2.48, 2.73, 1.99, 2.02, 2.74, 2.45, 2.52, 2.52, 2.62, 2.62, 2.71, 2.82, 2.82, 3.12, 3.3]}, {"name": "ELEC-1028", "type": "Electric Motor", "crit": "C", "seawater": false, "risk": 81, "vib": [2.04, 2.26, 2.49, 2.41, 2.86, 2.17, 2.31, 2.28, 2.2, 2.32, 2.68, 2.16, 2.32, 2.33, 2.51, 2.46, 2.59, 2.89, 2.18, 2.16, 2.37, 2.39, 2.45, 2.55, 2.49, 2.61, 2.76, 2.95, 3.17, 3.43]}, {"name": "CONT-1021", "type": "Control Valve", "crit": "B", "seawater": false, "risk": 69, "vib": [2.08, 1.98, 1.75, 1.85, 1.84, 2.02, 1.93, 1.98, 2.14, 2.17, 2.32, 2.5, 2.71, 2.95, 3.23, 3.54, 3.88, 4.26, 4.66, 5.1, 5.58, 6.08, 6.62, 6.62, 7.79, 8.43, 2.24, 2.43, 2.66, 2.93]}, {"name": "ELEC-1025", "type": "Electric Motor", "crit": "B", "seawater": false, "risk": 57, "vib": [2.6, 2.68, 2.46, 2.58, 2.51, 2.63, 2.44, 2.34, 2.22, 2.37, 2.66, 2.61, 2.31, 2.44, 2.2, 2.29, 2.22, 2.05, 2.16, 2.19, 2.23, 2.55, 2.42, 2.43, 2.54, 2.51, 2.58, 2.67, 2.78, 2.91]}], "vib_danger": 7.1, "vib_warn": 4.5};
+
+const C={tx:'#E6EDF1',dim:'#8AA0AD',faint:'#5E7886',line:'#27404F',
+  teal:'#2FB8C6',amber:'#E8A33D',red:'#E5524A',green:'#5FC9A0',grid:'rgba(255,255,255,.05)'};
+Chart.defaults.color=C.dim; Chart.defaults.font.family='IBM Plex Sans';
+Chart.defaults.font.size=11; Chart.defaults.borderColor=C.grid;
+
+const $=id=>document.getElementById(id);
+const f=DATA.fleet;
+$('plant').textContent=DATA.plant; $('period').textContent=DATA.period;
+$('m-assets').textContent=DATA.assets; $('m-fail').textContent=f.failures;
+$('k-oee').textContent=(f.oee*100).toFixed(1);
+$('k-mtbf').textContent=Math.round(f.mtbf).toLocaleString();
+$('k-mttr').textContent=f.mttr.toFixed(1);
+$('k-bd').textContent=Math.round(DATA.breakdown_share*100);
+$('auc-b').textContent=DATA.model.auc_base.toFixed(2);
+$('auc-f').textContent=DATA.model.auc_full.toFixed(2);
+$('rec-b').textContent=DATA.model.rec_base.toFixed(2);
+$('rec-f').textContent=DATA.model.rec_full.toFixed(2);
+
+const shortM=m=>{const[y,mo]=m.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1]+" '"+y.slice(2)};
+const gridY={grid:{color:C.grid},border:{display:false}};
+const gridX={grid:{display:false},border:{color:C.line}};
+
+// OEE trend
+new Chart($('oeeChart'),{type:'line',
+ data:{labels:DATA.oee_trend.map(d=>shortM(d.month)),datasets:[
+   {label:'OEE',data:DATA.oee_trend.map(d=>d.oee*100),borderColor:C.teal,backgroundColor:'rgba(47,184,198,.12)',borderWidth:2.5,fill:true,tension:.35,pointRadius:0},
+   {label:'Availability',data:DATA.oee_trend.map(d=>d.availability*100),borderColor:C.dim,borderWidth:1,tension:.35,pointRadius:0,borderDash:[4,3]},
+   {label:'Performance',data:DATA.oee_trend.map(d=>d.performance*100),borderColor:C.faint,borderWidth:1,tension:.35,pointRadius:0,borderDash:[2,3]},
+   {label:'Quality',data:DATA.oee_trend.map(d=>d.quality*100),borderColor:C.green,borderWidth:1,tension:.35,pointRadius:0,borderDash:[2,3]} ]},
+ options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+   plugins:{legend:{position:'bottom',labels:{boxWidth:10,boxHeight:2,padding:14,usePointStyle:false}},
+     tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
+   scales:{y:{...gridY,min:75,max:100,ticks:{callback:v=>v+'%'}},x:gridX}}});
+
+// Pareto
+new Chart($('paretoChart'),{
+ data:{labels:DATA.pareto.map(d=>d.mode),datasets:[
+  {type:'bar',label:'Failures',data:DATA.pareto.map(d=>d.count),
+   backgroundColor:DATA.pareto.map(d=>d.mode==='Seawater Leak'?C.teal:'#345263'),
+   borderRadius:4,maxBarThickness:38,yAxisID:'y'},
+  {type:'line',label:'Cumulative %',data:DATA.pareto.map(d=>d.cum),borderColor:C.amber,
+   borderWidth:2,pointRadius:2.5,pointBackgroundColor:C.amber,tension:.2,yAxisID:'y1'} ]},
+ options:{maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.type==='line'?c.parsed.y+'% cumulative':c.parsed.y+' failures'}}},
+  scales:{y:{...gridY,title:{display:true,text:'failures'}},
+    y1:{position:'right',min:0,max:100,grid:{display:false},border:{display:false},ticks:{callback:v=>v+'%'}},
+    x:{...gridX,ticks:{maxRotation:30,minRotation:30,font:{size:10}}}}}});
+
+// MTBF by criticality
+const critColor={A:C.red,B:C.amber,C:C.teal};
+new Chart($('critChart'),{type:'bar',
+ data:{labels:DATA.by_crit.map(d=>'Class '+d.crit),datasets:[
+   {label:'MTBF (h)',data:DATA.by_crit.map(d=>d.mtbf),
+    backgroundColor:DATA.by_crit.map(d=>critColor[d.crit]),borderRadius:5,maxBarThickness:60}]},
+ options:{maintainAspectRatio:false,plugins:{legend:{display:false},
+   tooltip:{callbacks:{label:c=>'MTBF '+c.parsed.y.toLocaleString()+' h · '+DATA.by_crit[c.dataIndex].failures+' failures'}}},
+   scales:{y:{...gridY,ticks:{callback:v=>(v/1000)+'k'}},x:gridX}}});
+
+// Top downtime (horizontal)
+new Chart($('downChart'),{type:'bar',
+ data:{labels:DATA.top_down.map(d=>d.name),datasets:[
+   {label:'Downtime (h)',data:DATA.top_down.map(d=>d.hours),
+    backgroundColor:DATA.top_down.map(d=>d.crit==='A'?C.red:d.crit==='B'?C.amber:'#345263'),
+    borderRadius:4,maxBarThickness:18}]},
+ options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false}},
+   scales:{x:{...gridY},y:{...gridX,ticks:{font:{family:'IBM Plex Mono',size:10}}}}}});
+
+// Watchlist sparklines
+function spark(vals){
+  const W=240,H=46,pad=4,dn=DATA.vib_danger,wn=DATA.vib_warn;
+  const max=Math.max(dn+0.6,...vals),min=Math.min(...vals,0);
+  const x=i=>pad+i*(W-2*pad)/(vals.length-1);
+  const y=v=>H-pad-(v-min)/(max-min)*(H-2*pad);
+  const pts=vals.map((v,i)=>x(i)+','+y(v)).join(' ');
+  const area=`${pad},${H-pad} ${pts} ${W-pad},${H-pad}`;
+  const last=vals[vals.length-1], col=last>=dn?C.red:last>=wn?C.amber:C.teal;
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <line x1="0" x2="${W}" y1="${y(dn)}" y2="${y(dn)}" stroke="${C.red}" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>
+    <line x1="0" x2="${W}" y1="${y(wn)}" y2="${y(wn)}" stroke="${C.amber}" stroke-width="1" stroke-dasharray="3 3" opacity=".4"/>
+    <polyline points="${area}" fill="${col}" opacity=".10"/>
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${x(vals.length-1)}" cy="${y(last)}" r="3" fill="${col}"/></svg>`;
+}
+const wrap=$('watch');
+DATA.watchlist.forEach(a=>{
+  const cls=a.risk>=55?'hi':a.risk>=35?'md':'lo';
+  const chips=`<span class="chip c${a.crit}">Class ${a.crit}</span>`+
+    (a.seawater?'<span class="chip sw">seawater-cooled</span>':'')+
+    `<span class="chip">${a.type}</span>`;
+  wrap.insertAdjacentHTML('beforeend',
+    `<div class="row"><div class="asset"><div class="nm mono">${a.name}</div><div class="chips">${chips}</div></div>
+     <div>${spark(a.vib)}</div>
+     <div class="risk ${cls}"><div class="pct">${a.risk}%</div><div class="pl">30-day risk</div></div></div>`);
+});
+</script>
+</body>
+</html>

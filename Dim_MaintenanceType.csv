@@ -1,0 +1,5 @@
+MaintenanceTypeID,TypeName
+1,Preventive
+2,Corrective
+3,Predictive
+4,Breakdown

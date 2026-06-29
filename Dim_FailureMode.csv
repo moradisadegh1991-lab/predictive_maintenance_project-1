@@ -1,0 +1,7 @@
+FailureModeID,FailureMode
+1,Seal Leak
+2,Bearing Failure
+3,Seawater Leak
+4,Corrosion
+5,Vibration
+6,Electrical Fault

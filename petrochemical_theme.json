@@ -1,0 +1,33 @@
+{
+  "name": "Petrochemical Control Room",
+  "dataColors": ["#2FB8C6", "#E8A33D", "#E5524A", "#5FC9A0", "#345263", "#8AA0AD", "#1d8995", "#E6EDF1"],
+  "background": "#0B141B",
+  "secondaryBackground": "#13212C",
+  "foreground": "#E6EDF1",
+  "tableAccent": "#2FB8C6",
+  "good": "#5FC9A0",
+  "neutral": "#E8A33D",
+  "bad": "#E5524A",
+  "maximum": "#E5524A",
+  "center": "#E8A33D",
+  "minimum": "#2FB8C6",
+  "textClasses": {
+    "title":    { "color": "#E6EDF1", "fontFace": "Segoe UI Semibold", "fontSize": 13 },
+    "header":   { "color": "#8AA0AD", "fontFace": "Segoe UI",          "fontSize": 11 },
+    "label":    { "color": "#E6EDF1", "fontFace": "Segoe UI",          "fontSize": 10 },
+    "callout":  { "color": "#E6EDF1", "fontFace": "DIN",               "fontSize": 30 }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background":    [{ "color": { "solid": { "color": "#13212C" } }, "transparency": 0 }],
+        "border":        [{ "color": { "solid": { "color": "#27404F" } }, "radius": 8, "show": true }],
+        "visualHeaderTooltip": [{ "background": { "solid": { "color": "#182B38" } } }],
+        "title":         [{ "fontColor": { "solid": { "color": "#E6EDF1" } }, "alignment": "left", "fontSize": 12 }]
+      }
+    },
+    "page": {
+      "*": { "background": [{ "color": { "solid": { "color": "#0B141B" } }, "transparency": 0 }] }
+    }
+  }
+}

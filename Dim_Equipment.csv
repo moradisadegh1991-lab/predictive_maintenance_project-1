@@ -1,0 +1,37 @@
+EquipmentID,AssetType,Area,CriticalityClass,AssetName,IsSeawaterCooled,InstallDate
+1001,Centrifugal Pump,Compression,A,CENT-1001,False,2016-01-22
+1002,Electric Motor,Compression,B,ELEC-1002,False,2017-01-12
+1003,Control Valve,Process-A,A,CONT-1003,False,2022-10-05
+1004,Heat Exchanger,Cooling Water,B,HEAT-1004,True,2021-05-14
+1005,Heat Exchanger,Utility,B,HEAT-1005,True,2017-04-03
+1006,Steam Turbine,Cooling Water,C,STEA-1006,True,2022-08-06
+1007,Centrifugal Pump,Cooling Water,C,CENT-1007,True,2017-01-06
+1008,Electric Motor,Process-A,B,ELEC-1008,False,2021-01-13
+1009,Compressor,Utility,C,COMP-1009,False,2016-08-01
+1010,Centrifugal Pump,Compression,C,CENT-1010,False,2020-12-12
+1011,Control Valve,Process-B,B,CONT-1011,False,2019-12-19
+1012,Steam Turbine,Compression,B,STEA-1012,False,2018-05-16
+1013,Electric Motor,Cooling Water,B,ELEC-1013,True,2022-02-13
+1014,Electric Motor,Cooling Water,A,ELEC-1014,True,2019-02-08
+1015,Electric Motor,Cooling Water,A,ELEC-1015,True,2019-06-21
+1016,Electric Motor,Utility,A,ELEC-1016,False,2017-07-09
+1017,Control Valve,Process-A,C,CONT-1017,False,2016-01-13
+1018,Centrifugal Pump,Process-B,B,CENT-1018,False,2018-05-10
+1019,Steam Turbine,Process-B,C,STEA-1019,False,2020-02-21
+1020,Heat Exchanger,Utility,C,HEAT-1020,True,2020-02-28
+1021,Control Valve,Process-B,B,CONT-1021,False,2020-01-30
+1022,Heat Exchanger,Utility,B,HEAT-1022,True,2017-04-23
+1023,Compressor,Cooling Water,A,COMP-1023,True,2020-10-03
+1024,Steam Turbine,Cooling Water,A,STEA-1024,True,2021-11-01
+1025,Electric Motor,Compression,B,ELEC-1025,False,2020-08-30
+1026,Control Valve,Cooling Water,B,CONT-1026,True,2022-11-04
+1027,Heat Exchanger,Process-A,B,HEAT-1027,True,2022-04-05
+1028,Electric Motor,Compression,C,ELEC-1028,False,2022-05-16
+1029,Control Valve,Process-B,B,CONT-1029,False,2017-08-09
+1030,Heat Exchanger,Process-A,B,HEAT-1030,True,2017-12-13
+1031,Heat Exchanger,Compression,B,HEAT-1031,True,2018-02-16
+1032,Compressor,Process-A,B,COMP-1032,False,2019-10-09
+1033,Centrifugal Pump,Utility,A,CENT-1033,False,2017-12-26
+1034,Control Valve,Process-B,B,CONT-1034,False,2021-11-15
+1035,Steam Turbine,Cooling Water,A,STEA-1035,True,2016-09-13
+1036,Centrifugal Pump,Utility,B,CENT-1036,False,2019-07-01
